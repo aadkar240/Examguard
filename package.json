@@ -1,0 +1,17 @@
+{
+  "name": "exam-grievance-system",
+  "version": "1.0.0",
+  "description": "Transparent Digital System for Exams, Evaluation, and Student Grievances",
+  "scripts": {
+    "install-all": "cd backend && npm install && cd ../frontend && npm install",
+    "backend": "cd backend && npm run dev",
+    "frontend": "cd frontend && npm run dev",
+    "dev": "concurrently \"npm run backend\" \"npm run frontend\""
+  },
+  "keywords": ["exam", "grievance", "education", "transparency"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "concurrently": "^8.2.2"
+  }
+}
