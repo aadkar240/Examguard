@@ -4,8 +4,9 @@ import User from './models/User.js';
 
 dotenv.config();
 
-const ADMIN_EMAIL = 'admin@gmail.com';
-const ADMIN_PASSWORD = 'admin123';
+const ADMIN_NAME = 'developerAtharva';
+const ADMIN_EMAIL = 'developeratharva@admin.com';
+const ADMIN_PASSWORD = 'atharva24';
 
 async function resetToSingleAdmin() {
   try {
@@ -26,7 +27,7 @@ async function resetToSingleAdmin() {
 
     if (!admin) {
       admin = new User({
-        name: 'Admin',
+        name: ADMIN_NAME,
         email: ADMIN_EMAIL,
         password: ADMIN_PASSWORD,
         role: 'admin',
@@ -39,7 +40,7 @@ async function resetToSingleAdmin() {
       await admin.save();
       console.log('✓ Created new admin account');
     } else {
-      admin.name = admin.name || 'Admin';
+      admin.name = ADMIN_NAME;
       admin.email = ADMIN_EMAIL;
       admin.password = ADMIN_PASSWORD;
       admin.role = 'admin';
