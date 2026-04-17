@@ -375,11 +375,11 @@ const Login = () => {
             <div className="text-xs text-blue-800 dark:text-blue-300 space-y-1">
               <p className="flex items-center gap-2">
                 <span>👤</span>
-                <span>Email: <strong>admin@gmail.com</strong></span>
+                <span>Email: <strong>developeratharva@admin.com</strong></span>
               </p>
               <p className="flex items-center gap-2">
                 <span>🔑</span>
-                <span>Password: <strong>admin123</strong></span>
+                <span>Password: <strong>atharva24</strong></span>
               </p>
             </div>
           </div>
