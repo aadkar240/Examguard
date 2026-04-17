@@ -16,6 +16,14 @@ export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [loading, setLoading] = useState(true)
 
+  const normalizeUserRole = (userData) => {
+    if (!userData) return userData
+    return {
+      ...userData,
+      role: String(userData.role || '').toLowerCase(),
+    }
+  }
+
   useEffect(() => {
     checkAuth()
   }, [])
@@ -26,7 +34,9 @@ export const AuthProvider = ({ children }) => {
 
     if (token && storedUser) {
       try {
-        setUser(JSON.parse(storedUser))
+        const normalizedStoredUser = normalizeUserRole(JSON.parse(storedUser))
+        setUser(normalizedStoredUser)
+        localStorage.setItem('user', JSON.stringify(normalizedStoredUser))
         // Verify token is still valid
         await api.get('/auth/me')
       } catch (error) {
@@ -42,13 +52,14 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login', { email, password })
       console.log(response.data)
       const { token, user } = response.data
+      const normalizedUser = normalizeUserRole(user)
 
       localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
-      setUser(user)
+      localStorage.setItem('user', JSON.stringify(normalizedUser))
+      setUser(normalizedUser)
       
       toast.success('Login successful!')
-      return { success: true, user, data: response.data }
+      return { success: true, user: normalizedUser, data: { ...response.data, user: normalizedUser } }
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed'
       toast.error(message)
@@ -105,13 +116,14 @@ export const AuthProvider = ({ children }) => {
       const response = await api.post('/auth/login-otp', { email, otp })
       console.log(response.data)
       const { token, user } = response.data
+      const normalizedUser = normalizeUserRole(user)
 
       localStorage.setItem('token', token)
-      localStorage.setItem('user', JSON.stringify(user))
-      setUser(user)
+      localStorage.setItem('user', JSON.stringify(normalizedUser))
+      setUser(normalizedUser)
 
       toast.success('Login successful!')
-      return { success: true, user, data: response.data }
+      return { success: true, user: normalizedUser, data: { ...response.data, user: normalizedUser } }
     } catch (error) {
       const message = error.response?.data?.message || 'OTP login failed'
       toast.error(message)
@@ -127,8 +139,9 @@ export const AuthProvider = ({ children }) => {
   }
 
   const updateUser = (updatedUser) => {
-    setUser(updatedUser)
-    localStorage.setItem('user', JSON.stringify(updatedUser))
+    const normalizedUser = normalizeUserRole(updatedUser)
+    setUser(normalizedUser)
+    localStorage.setItem('user', JSON.stringify(normalizedUser))
   }
 
   const value = {

@@ -10,6 +10,7 @@ const Layout = ({ children }) => {
   const { theme, toggleTheme, language, setLanguage, languageOptions, t } = useUI()
   const navigate = useNavigate()
   const [isProfileOpen, setIsProfileOpen] = useState(false)
+  const userRole = String(user?.role || '').toLowerCase()
 
   const handleLogout = () => {
     logout()
@@ -17,7 +18,7 @@ const Layout = ({ children }) => {
   }
 
   const getNavLinks = () => {
-    if (user?.role === 'student') {
+    if (userRole === 'student') {
       return [
         { path: '/student/dashboard', label: t('dashboard'), icon: <FiHome /> },
         { path: '/student/exams', label: t('exams'), icon: <FiBook /> },
@@ -25,14 +26,14 @@ const Layout = ({ children }) => {
         { path: '/student/results', label: 'Results', icon: <FiCheckSquare /> },
         { path: '/student/grievances', label: t('grievances'), icon: <FiMessageSquare /> },
       ]
-    } else if (user?.role === 'faculty') {
+    } else if (userRole === 'faculty') {
       return [
         { path: '/faculty/dashboard', label: t('dashboard'), icon: <FiHome /> },
         { path: '/faculty/exam/create', label: t('createExam'), icon: <FiBook /> },
         { path: '/faculty/exam/evaluate', label: t('evaluateExam'), icon: <FiCheckSquare /> },
         { path: '/faculty/grievances', label: t('grievances'), icon: <FiMessageSquare /> },
       ]
-    } else if (user?.role === 'admin') {
+    } else if (userRole === 'admin') {
       return [
         { path: '/admin/dashboard', label: t('dashboard'), icon: <FiHome /> },
         { path: '/admin/registry', label: 'Registry', icon: <FiClipboard /> },

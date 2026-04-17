@@ -41,11 +41,11 @@ const Login = () => {
       const role = String(result?.data?.user?.role || result?.user?.role || '').toLowerCase()
 
       if (role === 'admin') {
-        navigate('/admin')
+        navigate('/admin', { replace: true })
       } else if (role === 'faculty') {
-        navigate('/faculty/dashboard')
+        navigate('/faculty/dashboard', { replace: true })
       } else {
-        navigate('/dashboard')
+        navigate('/dashboard', { replace: true })
       }
     }
     

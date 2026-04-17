@@ -26,6 +26,7 @@ import Layout from './components/Layout'
 // Protected Route Component
 const ProtectedRoute = ({ children, allowedRoles }) => {
   const { user, loading } = useAuth()
+  const userRole = String(user?.role || '').toLowerCase()
 
   if (loading) {
     return (
@@ -39,7 +40,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
     return <Navigate to="/login" />
   }
 
-  if (allowedRoles && !allowedRoles.includes(user.role)) {
+  if (allowedRoles && !allowedRoles.includes(userRole)) {
     return <Navigate to="/" />
   }
 
@@ -48,6 +49,7 @@ const ProtectedRoute = ({ children, allowedRoles }) => {
 
 function App() {
   const { user } = useAuth()
+  const userRole = String(user?.role || '').toLowerCase()
 
   return (
     <Router>
@@ -62,9 +64,9 @@ function App() {
           element={
             <ProtectedRoute>
               <Layout>
-                {user?.role === 'student' && <Navigate to="/dashboard" />}
-                {user?.role === 'faculty' && <Navigate to="/faculty/dashboard" />}
-                {user?.role === 'admin' && <Navigate to="/admin" />}
+                {userRole === 'student' && <Navigate to="/dashboard" />}
+                {userRole === 'faculty' && <Navigate to="/faculty/dashboard" />}
+                {userRole === 'admin' && <Navigate to="/admin" />}
               </Layout>
             </ProtectedRoute>
           }
@@ -74,8 +76,8 @@ function App() {
           path="/dashboard"
           element={
             <ProtectedRoute>
-              {user?.role === 'admin' && <Navigate to="/admin" />}
-              {user?.role === 'faculty' && <Navigate to="/faculty/dashboard" />}
+              {userRole === 'admin' && <Navigate to="/admin" />}
+              {userRole === 'faculty' && <Navigate to="/faculty/dashboard" />}
               <Layout>
                 <StudentDashboard />
               </Layout>
