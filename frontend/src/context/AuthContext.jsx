@@ -40,6 +40,7 @@ export const AuthProvider = ({ children }) => {
   const login = async (email, password) => {
     try {
       const response = await api.post('/auth/login', { email, password })
+      console.log(response.data)
       const { token, user } = response.data
 
       localStorage.setItem('token', token)
@@ -47,7 +48,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user)
       
       toast.success('Login successful!')
-      return { success: true }
+      return { success: true, user, data: response.data }
     } catch (error) {
       const message = error.response?.data?.message || 'Login failed'
       toast.error(message)
@@ -102,6 +103,7 @@ export const AuthProvider = ({ children }) => {
   const loginWithOtp = async (email, otp) => {
     try {
       const response = await api.post('/auth/login-otp', { email, otp })
+      console.log(response.data)
       const { token, user } = response.data
 
       localStorage.setItem('token', token)
@@ -109,7 +111,7 @@ export const AuthProvider = ({ children }) => {
       setUser(user)
 
       toast.success('Login successful!')
-      return { success: true }
+      return { success: true, user, data: response.data }
     } catch (error) {
       const message = error.response?.data?.message || 'OTP login failed'
       toast.error(message)

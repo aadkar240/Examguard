@@ -38,7 +38,15 @@ const Login = () => {
         : await loginWithOtp(formData.email, formData.otp)
     
     if (result.success) {
-      navigate('/')
+      const role = String(result?.data?.user?.role || result?.user?.role || '').toLowerCase()
+
+      if (role === 'admin') {
+        navigate('/admin')
+      } else if (role === 'faculty') {
+        navigate('/faculty/dashboard')
+      } else {
+        navigate('/dashboard')
+      }
     }
     
     setLoading(false)

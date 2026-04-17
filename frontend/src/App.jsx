@@ -62,9 +62,22 @@ function App() {
           element={
             <ProtectedRoute>
               <Layout>
-                {user?.role === 'student' && <Navigate to="/student/dashboard" />}
+                {user?.role === 'student' && <Navigate to="/dashboard" />}
                 {user?.role === 'faculty' && <Navigate to="/faculty/dashboard" />}
-                {user?.role === 'admin' && <Navigate to="/admin/dashboard" />}
+                {user?.role === 'admin' && <Navigate to="/admin" />}
+              </Layout>
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/dashboard"
+          element={
+            <ProtectedRoute>
+              {user?.role === 'admin' && <Navigate to="/admin" />}
+              {user?.role === 'faculty' && <Navigate to="/faculty/dashboard" />}
+              <Layout>
+                <StudentDashboard />
               </Layout>
             </ProtectedRoute>
           }
@@ -196,7 +209,7 @@ function App() {
 
         {/* Admin Routes */}
         <Route
-          path="/admin/dashboard"
+          path="/admin"
           element={
             <ProtectedRoute allowedRoles={['admin']}>
               <Layout>
@@ -204,6 +217,10 @@ function App() {
               </Layout>
             </ProtectedRoute>
           }
+        />
+        <Route
+          path="/admin/dashboard"
+          element={<Navigate to="/admin" />}
         />
         <Route
           path="/admin/registry"
