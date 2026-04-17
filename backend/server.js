@@ -37,29 +37,23 @@ const httpServer = createServer(app);
 
 const allowedOrigins = [
   'http://localhost:5173',
-  'https://examguard.vercel.app',
-  process.env.FRONTEND_URL
-].filter(Boolean);
-
-const corsOriginHandler = (origin, callback) => {
-  if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
-    return callback(null, true);
-  }
-
-  // Temporary debugging mode: allow non-whitelisted origins as well.
-  return callback(null, true);
-};
-
-const corsOptions = {
-  origin: corsOriginHandler,
-  credentials: true
-};
+  'https://examguard.vercel.app'
+];
 
 // Initialize Socket.IO
 const io = new Server(httpServer, {
   cors: {
-    origin: corsOriginHandler,
-    methods: ['GET', 'POST']
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // TEMPORARY: allow all origins for debugging.
+      return callback(null, true);
+    },
+    methods: ['GET', 'POST'],
+    credentials: true
   }
 });
 
@@ -67,7 +61,20 @@ const io = new Server(httpServer, {
 connectDB();
 
 // Middleware
-app.use(cors(corsOptions));
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin) return callback(null, true);
+      if (allowedOrigins.includes(origin)) {
+        return callback(null, true);
+      }
+
+      // TEMPORARY: allow all origins for debugging.
+      return callback(null, true);
+    },
+    credentials: true
+  })
+);
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
