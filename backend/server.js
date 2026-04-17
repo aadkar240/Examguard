@@ -35,27 +35,24 @@ if (!process.env.JWT_SECRET) {
 const app = express();
 const httpServer = createServer(app);
 
-const isAllowedOrigin = (origin) => {
-  if (!origin) return true;
-
-  const allowedOrigins = [
-    'http://localhost:3000',
-    'http://localhost:3001',
-    process.env.FRONTEND_URL
-  ].filter(Boolean);
-
-  if (allowedOrigins.includes(origin)) {
-    return true;
-  }
-
-  return /^http:\/\/localhost:\d+$/.test(origin);
-};
+const allowedOrigins = [
+  'http://localhost:5173',
+  'https://examguard.vercel.app',
+  process.env.FRONTEND_URL
+].filter(Boolean);
 
 const corsOriginHandler = (origin, callback) => {
-  if (isAllowedOrigin(origin)) {
+  if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
     return callback(null, true);
   }
-  return callback(new Error('Not allowed by CORS'));
+
+  // Temporary debugging mode: allow non-whitelisted origins as well.
+  return callback(null, true);
+};
+
+const corsOptions = {
+  origin: corsOriginHandler,
+  credentials: true
 };
 
 // Initialize Socket.IO
@@ -70,10 +67,7 @@ const io = new Server(httpServer, {
 connectDB();
 
 // Middleware
-app.use(cors({
-  origin: corsOriginHandler,
-  credentials: true
-}));
+app.use(cors(corsOptions));
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
