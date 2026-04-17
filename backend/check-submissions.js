@@ -2,8 +2,19 @@ import mongoose from 'mongoose';
 import Evaluation from './models/Evaluation.js';
 import Exam from './models/Exam.js';
 import User from './models/User.js';
+import dotenv from 'dotenv';
 
-mongoose.connect('mongodb://localhost:27017/exam-grievance-system')
+dotenv.config();
+
+if (!process.env.MONGODB_URI) {
+  throw new Error('MONGODB_URI is not defined');
+}
+
+mongoose.connect(process.env.MONGODB_URI, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true
+})
+  .then(() => console.log('MongoDB connected'))
   .then(async () => {
     console.log('\n=== CHECKING SUBMISSIONS ===\n');
     

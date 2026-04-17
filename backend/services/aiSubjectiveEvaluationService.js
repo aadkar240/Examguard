@@ -1,8 +1,14 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-});
+const getGroqClient = () => {
+  const groqApiKey = String(process.env.GROQ_API_KEY || '').trim();
+
+  if (!groqApiKey) {
+    throw new Error('GROQ_API_KEY is not defined');
+  }
+
+  return new Groq({ apiKey: groqApiKey });
+};
 
 /**
  * Extract keywords from an answer using Groq API
@@ -16,7 +22,7 @@ export const extractKeywords = async (answer, question) => {
       return [];
     }
 
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroqClient().chat.completions.create({
       model: 'llama-3.1-8b-instant',
       max_tokens: 200,
       messages: [

@@ -6,7 +6,14 @@ dotenv.config();
 async function checkDatabase() {
   try {
     console.log('[DB_CHECK] Connecting to MongoDB...');
-    await mongoose.connect(process.env.MONGODB_URI);
+    if (!process.env.MONGODB_URI) {
+      throw new Error('MONGODB_URI is not defined');
+    }
+    await mongoose.connect(process.env.MONGODB_URI, {
+      useNewUrlParser: true,
+      useUnifiedTopology: true
+    });
+    console.log('MongoDB connected');
     console.log('[DB_CHECK] ✅ Connected to MongoDB');
 
     // Get the EmailOtp model

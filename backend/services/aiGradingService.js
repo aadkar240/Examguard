@@ -1,8 +1,14 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({
-  apiKey: process.env.GROQ_API_KEY
-});
+const getGroqClient = () => {
+  const groqApiKey = String(process.env.GROQ_API_KEY || '').trim();
+
+  if (!groqApiKey) {
+    throw new Error('GROQ_API_KEY is not defined');
+  }
+
+  return new Groq({ apiKey: groqApiKey });
+};
 
 /**
  * Evaluate a student's answer using AI
@@ -121,7 +127,7 @@ Provide your evaluation in the following JSON format:
 
 Be thorough and fair. Reward genuine effort even if imperfect. Penalize obvious copying/AI use. Only return valid JSON, no additional text.`;
 
-    const completion = await groq.chat.completions.create({
+    const completion = await getGroqClient().chat.completions.create({
       messages: [
         {
           role: 'system',
