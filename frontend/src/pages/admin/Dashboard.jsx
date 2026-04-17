@@ -3,6 +3,7 @@ import api from '../../utils/api'
 import { FiUsers, FiBook, FiClipboard, FiMessageSquare, FiCheckCircle, FiAlertCircle } from 'react-icons/fi'
 import { toast } from 'react-toastify'
 import { io } from 'socket.io-client'
+import { API_BASE_URL, API_URL } from '../../config/api'
 
 const AdminDashboard = () => {
   const [stats, setStats] = useState(null)
@@ -80,8 +81,7 @@ const AdminDashboard = () => {
     }
   }
 
-  const apiBaseUrl = import.meta.env.VITE_API_URL || 'http://localhost:5000/api'
-  const socketBaseUrl = apiBaseUrl.replace(/\/api\/?$/, '')
+  const socketBaseUrl = API_BASE_URL
   const authToken = localStorage.getItem('token')
 
   useEffect(() => {
@@ -116,7 +116,7 @@ const AdminDashboard = () => {
     }
   }, [socketBaseUrl])
 
-  const getSecureRecordingUrl = (recordingId) => `${apiBaseUrl}/proctoring/recordings/${recordingId}/stream?token=${encodeURIComponent(authToken || '')}`
+  const getSecureRecordingUrl = (recordingId) => `${API_URL}/proctoring/recordings/${recordingId}/stream?token=${encodeURIComponent(authToken || '')}`
 
   const toggleRecordingSelection = (recordingId) => {
     setSelectedRecordingIds((prev) =>
